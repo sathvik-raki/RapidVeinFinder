@@ -4,14 +4,14 @@ from matplotlib import pyplot as plt
 
 
 # reading the video
-#source = cv2.VideoCapture(0)
-source = cv2.VideoCapture('Video2.avi')
+source = cv2.VideoCapture(0)
+#source = cv2.VideoCapture('Video2.avi')
 
 
 frame_width = int(source.get(3))
 frame_height = int(source.get(4))   
 size = (frame_width, frame_height)
-result = cv2.VideoWriter('filename2.avi',  cv2.VideoWriter_fourcc(*'MJPG'),10, size)
+#result = cv2.VideoWriter('filename2.avi',  cv2.VideoWriter_fourcc(*'MJPG'),10, size)
 
 #img = cv2.imread('veinImage1.jpg',0)
 #img = img[150:300,150:350]
@@ -46,15 +46,17 @@ while True:
 
         #morphological transform
         opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
+        
 
         #finding outlines via contouring process
         contours, hierarchy = cv2.findContours(opening,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
         img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR) 
         dst = cv2.drawContours(img1, contours, -1, (0,255,0), -1)
         
-        result.write(dst)
         
-        cv2.imshow("Live", dst)
+        #result.write(dst)
+        
+        cv2.imshow("Live", opening)
         
         key = cv2.waitKey(1)
         if key == ord("q"):
@@ -70,4 +72,4 @@ while True:
 print (a,b)
 
 source.release()
-result.release()
+#result.release()
