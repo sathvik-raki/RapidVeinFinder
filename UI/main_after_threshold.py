@@ -74,7 +74,6 @@ class MainWindow:
 
 # Define webcam class
 class WebCam(QThread):
-
     
     ImageUpdate = pyqtSignal(QImage)
 
@@ -85,37 +84,43 @@ class WebCam(QThread):
         while self.ThreadActive:
             a = 0
             b = 255
+            ClacheClipLimit = 1.5
+            ClacheTile1 = 7
+            ClacheTile2 = ClacheTile1
+            medianBlur = 5
+            adaptiveThresh1 = 255
+            adaptiveThresh2 = 25
+            adaptiveThresh3 = 2.55
+            gaussianBlurTile1 = 5
+            gaussianBlurTile2 = gaussianBlurTile1
+            gaussianBlur = 0
+            thresh1 = 0
+            thresh2 = 255
+            
+            
             ret, img = Capture.read()
             if ret:
-                kernel = np.ones((5,5), np.uint8)
 
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
                 
                 img = cv2.normalize(img,img, a, b, cv2.NORM_MINMAX)
                 
                 # create a CLAHE object (Arguments are optional).
-                clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(7,7))
+                clahe = cv2.createCLAHE(clipLimit=ClacheClipLimit, tileGridSize=(ClacheTile1,ClacheTile2))
                 cl1 = clahe.apply(img)
 
                 #apply adaptive threshold
-                cl2 = cv2.medianBlur(cl1, 5)
-                th1 = cv2.adaptiveThreshold(cl2,255,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,25,2.55)
+                cl2 = cv2.medianBlur(cl1, medianBlur)
+                th1 = cv2.adaptiveThreshold(cl2,adaptiveThresh1,cv2.ADAPTIVE_THRESH_MEAN_C,cv2.THRESH_BINARY_INV,adaptiveThresh2,adaptiveThresh3)
 
                 #apply otsu threshold
-                blur = cv2.GaussianBlur(cl1,(5,5),0)
-                ret3,th3 = cv2.threshold(blur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+                blur = cv2.GaussianBlur(cl1,(gaussianBlurTile1,gaussianBlurTile2),gaussianBlur)
+                ret3,th3 = cv2.threshold(blur,thresh1,thresh2,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
 
                 #removing noise 
                 th2 = th1 & th3
 
-                #morphological transform
-                opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
-
-                #finding outlines via contouring process
-                #contours, hierarchy = cv2.findContours(opening,cv2.RETR_TREE,cv2.CHAIN_APPROX_NONE)
-                #img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR) 
-                #dst = cv2.drawContours(img1, contours, -1, (0,255,0), -1)
-                openingImg = cv2.cvtColor(th3, cv2.COLOR_GRAY2BGR) 
+                openingImg = cv2.cvtColor(th2, cv2.COLOR_GRAY2BGR) 
 
                 Qtformat = QImage(openingImg.data, openingImg.shape[1], openingImg.shape[0], QImage.Format_RGB888)
                 self.ImageUpdate.emit(Qtformat)
