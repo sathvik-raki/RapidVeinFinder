@@ -83,8 +83,12 @@ class WebCam(QThread):
             ret, img = Capture.read()
             if ret:
                 kernel = np.ones((5,5), np.uint8)
-
+                img = cv2.resize(img, (240, 240)) 
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                data = np.array(img)
+                img = data.flatten()
+                img= img.reshape(240, 240)
+
                 
                 img = cv2.normalize(img,img, a, b, cv2.NORM_MINMAX)
                 
