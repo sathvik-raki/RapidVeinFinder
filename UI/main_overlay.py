@@ -32,12 +32,7 @@ class MainWindow:
         # Auto scale video feed
         self.ui.video_label.setScaledContents(True)
 
-        # Add functionalities to the buttons
-        self.ui.video_button.clicked.connect(self.show_video_page)
-        self.ui.contrast_button.clicked.connect(self.show_contrast_page)
-        self.ui.depth_button.clicked.connect(self.show_depth_page)
-        self.ui.info_button.clicked.connect(self.show_info_page)
-        self.menu_button.clicked.connect(self.animate_side_menu)
+
 
     # Define what will be shown when buttons are clicked
     def show(self):
