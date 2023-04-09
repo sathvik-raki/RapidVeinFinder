@@ -11,7 +11,7 @@ source = cv2.VideoCapture(0)
 frame_width = int(source.get(3))
 frame_height = int(source.get(4))   
 size = (frame_width, frame_height)
-#result = cv2.VideoWriter('filename2.avi',  cv2.VideoWriter_fourcc(*'MJPG'),10, size)
+result = cv2.VideoWriter('filename2.avi',  cv2.VideoWriter_fourcc(*'MJPG'),10, size)
 
 #img = cv2.imread('veinImage1.jpg',0)
 #img = img[150:300,150:350]
@@ -20,12 +20,15 @@ a = 0
 b = 255
 
 while True:
-    ret, img = source.read()
+    ret, img1 = source.read()
+    
+    result.write(img1)
     
     if ret == True:
         kernel = np.ones((5,5), np.uint8)
 
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
+        
         
         img = cv2.normalize(img,img, a, b, cv2.NORM_MINMAX)
         
@@ -56,7 +59,7 @@ while True:
         
         #result.write(dst)
         
-        cv2.imshow("Live", opening)
+        cv2.imshow("Live", img)
         
         key = cv2.waitKey(1)
         if key == ord("q"):
@@ -72,4 +75,4 @@ while True:
 print (a,b)
 
 source.release()
-#result.release()
+result.release()
