@@ -9,42 +9,10 @@ from CapstonePY import Ui_MainWindow
 import os
 
 
-global contrast
-global brightness
-global cam_button_press
-global ClacheClipLimit
-global ClacheTile_one
-global ClacheTile_two 
-global medianBlur
-global adaptiveThres_one
-global adaptiveThres_two
-global adaptiveThres_three
-global gaussianBlurTile_one
-global gaussianBlurTile_two 
-global gaussianBlur
-global thresh_one
-global thresh_two
-
-contrast = 1
-brightness = 5.0
-cam_button_press = 0
-ClacheClipLimit = 1.2
-ClacheTile_one = 7
-ClacheTile_two = ClacheTile_one
-medianBlur = 5
-adaptiveThres_one = 255
-adaptiveThres_two = 255
-adaptiveThres_three = 7
-gaussianBlurTile_one = 5
-gaussianBlurTile_two = gaussianBlurTile_one
-gaussianBlur = 0
-thresh_one = 0
-thresh_two = 255
-
 # Define MainWindow class
 class MainWindow():
 
-    def __init__(self,):
+    def __init__(self):
         self.main_win = QMainWindow()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.main_win)
@@ -89,8 +57,11 @@ class MainWindow():
         self.ui.Thres_two_slider.valueChanged.connect(self.set_thresh_two)
         self.ui.camera_button.clicked.connect(self.change_cam_button_state)
         self.ui.save_button.clicked.connect(self.image_saving_function)
+        self.ui.mode_one_button.clicked.connect(self.change_to_mode_one)
+        self.ui.mode_two_button.clicked.connect(self.change_to_mode_two)
+        self.ui.mode_three_button.clicked.connect(self.change_to_mode_three)
 
-        # Set initial values of parameters
+        # Set initial slider values
         self.ui.contrast_slider.setValue(10)
         self.ui.brightness_slider.setValue(5)
         self.ui.CCL_slider.setValue(15)
@@ -108,6 +79,7 @@ class MainWindow():
         self.ui.AT_one_slider.setMaximum(1000)
         self.ui.GBlur_slider.setMaximum(1000) 
         self.ui.C_tile_slider.setMaximum(1000)
+
     # Define what will be shown when buttons are clicked
     def show(self):
         self.main_win.show()
@@ -127,6 +99,21 @@ class MainWindow():
     # Function to change camera button state when button is pressed
     def change_cam_button_state(self):
         self.Pi_camera.cam_button_press = 1
+
+    def change_to_mode_one(self):
+        self.Pi_camera.mode_one_button_press = 1
+        self.Pi_camera.mode_two_button_press = 0
+        self.Pi_camera.mode_three_button_press = 0
+
+    def change_to_mode_two(self):
+        self.Pi_camera.mode_two_button_press = 1
+        self.Pi_camera.mode_one_button_press = 0
+        self.Pi_camera.mode_three_button_press = 0
+
+    def change_to_mode_three(self):
+        self.Pi_camera.mode_three_button_press = 1
+        self.Pi_camera.mode_one_button_press = 0
+        self.Pi_camera.mode_two_button_press = 0
 
     # Functions to convert signals from Pi_camera class to pixmap and attach to labels
     def video_label_slot(self, Image):
@@ -221,65 +208,8 @@ class MainWindow():
     def set_thresh_two(self, value):
         self.Pi_camera.thresh_two = value
         self.ui.Thres_two_display.setText(str(self.Pi_camera.thresh_two))
-        
-def convertQImageToMat(incomingImage):
-    '''  Converts a QImage into an opencv MAT format  '''
 
-    incomingImage = incomingImage.convertToFormat(4)
-
-    width = incomingImage.width()
-    height = incomingImage.height()
-
-    ptr = incomingImage.bits()
-    ptr.setsize(incomingImage.byteCount())
-    arr = np.array(ptr).reshape(height, width, 4)  #  Copies the data
-    return arr
-        
-def image_processor(img):
-    #cv2.namedWindow("output", cv2.WINDOW_NORMAL) 
-    #img = cv2.imread("imageTest2.png", cv2.IMREAD_COLOR)
-
-    kernel = np.ones((1, 1), np.uint8)
-    
-    img = cv2.resize(img, (240, 240)) 
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    data = np.array(img)
-    img = data.flatten()
-    img= img.reshape(240, 240)
-    
-    img = cv2.convertScaleAbs(img, alpha=contrast, beta=brightness)
-
-    # Create a CLAHE object (Arguments are optional)
-    clahe = cv2.createCLAHE(clipLimit=ClacheClipLimit, tileGridSize=(ClacheTile_one, ClacheTile_two))
-    cl1 = clahe.apply(img)
-
-    # Apply adaptive threshold
-    cl2 = cv2.medianBlur(cl1, medianBlur)
-    th1 = cv2.adaptiveThreshold(cl2, adaptiveThres_one, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, adaptiveThres_two, adaptiveThres_three)
-
-    # Apply OTSU threshold
-    blur = cv2.GaussianBlur(cl1, (gaussianBlurTile_one, gaussianBlurTile_two), gaussianBlur)
-    ret3, th3 = cv2.threshold(blur, thresh_one, thresh_two, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-
-    # Removing noise
-    th2 = th1 & th3
-
-    # Morphological transform
-    opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
-
-    # Finding outlines via contouring process
-    contours, hierarchy = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-    img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-    dst = cv2.drawContours(img1, contours, -1, (0, 255, 0), -1)
-    openingImg = cv2.cvtColor(th2, cv2.COLOR_GRAY2BGR)
-    #cv2.imwrite("out.jpg", dst)
-    
-    #cv2.imshow("Live", dst)
-    
-    print("D")
-    return dst
-
-# Define Pi camera class
+#Define Pi_camera class
 
 class Pi_camera(QThread):
 
@@ -290,108 +220,192 @@ class Pi_camera(QThread):
 
     def __init__(self):
         super().__init__()
-        self.contrast = contrast
-        self.brightness = brightness
-        self.cam_button_press = cam_button_press
-        self.ClacheClipLimit = ClacheClipLimit
-        self.ClacheTile_one = ClacheTile_one
+        self.contrast = 1
+        self.brightness = 5.0
+        self.cam_button_press = 0
+        self.ClacheClipLimit = 1.2
+        self.ClacheTile_one = 7
         self.ClacheTile_two = self.ClacheTile_one
-        self.medianBlur = medianBlur
-        self.adaptiveThres_one = adaptiveThres_one
-        self.adaptiveThres_two = adaptiveThres_two
-        self.adaptiveThres_three = adaptiveThres_three
-        self.gaussianBlurTile_one = gaussianBlurTile_one
+        self.medianBlur = 5
+        self.adaptiveThres_one = 255
+        self.adaptiveThres_two = 255
+        self.adaptiveThres_three = 7
+        self.gaussianBlurTile_one = 5
         self.gaussianBlurTile_two = self.gaussianBlurTile_one
-        self.gaussianBlur = gaussianBlur
-        self.thresh_one = thresh_one
-        self.thresh_two = thresh_two
+        self.gaussianBlur = 0
+        self.thresh_one = 0
+        self.thresh_two = 255
+        self.mode_one_button_press = 1
+        self.mode_two_button_press = 0
+        self.mode_three_button_press = 0
+
+
+    def video_processor(self, img):
+        #img = cv2.imread("imageTest2.png", cv2.IMREAD_COLOR)
+        
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+        kernel = np.ones((1, 1), np.uint8)
+        
+        # Apply a median blur to reduce noise
+        img_blur = cv2.medianBlur(img, 5)
+
+        # Apply thresholding to binarize the image
+        _, img_thresh = cv2.threshold(img_blur, 0, 255, cv2.THRESH_BINARY_INV+cv2.THRESH_OTSU)
+
+        # Perform morphological operations to remove noise and fill gaps
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (15, 15))
+        img_morph = cv2.morphologyEx(img_thresh, cv2.MORPH_CLOSE, kernel)
+
+        # Darken the pixels corresponding to the veins in the original image
+        img_with_veins = np.copy(img)
+        img_with_veins[img_morph==255] = (img_with_veins[img_morph==255] * 0.5).astype(np.uint8)
+        img = img_with_veins
+
+        img = cv2.resize(img, (240, 240)) 
+        #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        data = np.array(img)
+        img = data.flatten()
+        img= img.reshape(240, 240)
+        
+        img = cv2.convertScaleAbs(img, alpha=self.contrast, beta=self.brightness)
+
+        # Create a CLAHE object (Arguments are optional)
+        clahe = cv2.createCLAHE(clipLimit=self.ClacheClipLimit, tileGridSize=(self.ClacheTile_one, self.ClacheTile_two))
+        cl1 = clahe.apply(img)
+
+        # Apply adaptive threshold
+        cl2 = cv2.medianBlur(cl1, self.medianBlur)
+        th1 = cv2.adaptiveThreshold(cl2, self.adaptiveThres_one, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, self.adaptiveThres_two, self.adaptiveThres_three)
+
+        # Apply OTSU threshold
+        blur = cv2.GaussianBlur(cl1, (self.gaussianBlurTile_one, self.gaussianBlurTile_two), self.gaussianBlur)
+        _, th3 = cv2.threshold(blur, self.thresh_one, self.thresh_two, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+        # Removing noise
+        th2 = th1 & th3
+
+        # Morphological transform
+        opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
+
+        # Finding outlines via contouring process
+        contours,_ = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        dst = cv2.drawContours(img1, contours, -1, (0, 255, 0), -1)
+
+        return dst
+
+    def image_processor_mode_two(self, img):
+
+        kernel = np.ones((1, 1), np.uint8)
+
+        img = cv2.resize(img, (240, 240))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        data = np.array(img)
+        img = data.flatten()
+        img = img.reshape(240, 240)
+
+        img = cv2.convertScaleAbs(img, alpha= self.contrast, beta= self.brightness)
+
+        # Create a CLAHE object (Arguments are optional)
+        clahe = cv2.createCLAHE(clipLimit= self.ClacheClipLimit, tileGridSize=(self.ClacheTile_one, self.ClacheTile_two))
+        cl1 = clahe.apply(img)
+
+        # Apply adaptive threshold
+        cl2 = cv2.medianBlur(cl1, self.medianBlur)
+        th1 = cv2.adaptiveThreshold(cl2, self.adaptiveThres_one, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, self.adaptiveThres_two, self.adaptiveThres_three)
+
+        # Apply OTSU threshold
+        blur = cv2.GaussianBlur(cl1, (self.gaussianBlurTile_one, self.gaussianBlurTile_two), self.gaussianBlur)
+        ret3, th3 = cv2.threshold(blur, self.thresh_one, self.thresh_two, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+        # Removing noise
+        th2 = th1 & th3
+
+        # Morphological transform
+        opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
+
+        # Finding outlines via contouring process
+        contours, hierarchy = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        dst = cv2.drawContours(img1, contours, -1, (0, 0, 255), -1)
+
+        return dst
+
+    def image_processor_mode_three(self, img):
+
+        kernel = np.ones((1, 1), np.uint8)
+
+        img = cv2.resize(img, (240, 240))
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        data = np.array(img)
+        img = data.flatten()
+        img = img.reshape(240, 240)
+
+        img = cv2.convertScaleAbs(img, alpha= self.contrast, beta= self.brightness)
+
+        # Create a CLAHE object (Arguments are optional)
+        clahe = cv2.createCLAHE(clipLimit= self.ClacheClipLimit, tileGridSize=(self.ClacheTile_one, self.ClacheTile_two))
+        cl1 = clahe.apply(img)
+
+        # Apply adaptive threshold
+        cl2 = cv2.medianBlur(cl1, self.medianBlur)
+        th1 = cv2.adaptiveThreshold(cl2, self.adaptiveThres_one, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, self.adaptiveThres_two, self.adaptiveThres_three)
+
+        # Apply OTSU threshold
+        blur = cv2.GaussianBlur(cl1, (self.gaussianBlurTile_one, self.gaussianBlurTile_two), self.gaussianBlur)
+        ret3, th3 = cv2.threshold(blur, self.thresh_one, self.thresh_two, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+        # Removing noise
+        th2 = th1 & th3
+
+        # Morphological transform
+        opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
+
+        # Finding outlines via contouring process
+        contours, hierarchy = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+        img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        dst = cv2.drawContours(img1, contours, -1, (0, 255, 255), -1)
+
+        return dst
 
     def run(self):
         self.ThreadActive = True
 
-        
         Capture = cv2.VideoCapture(0)
-        #Capture = cv2.VideoCapture('filename2.avi')
-        
-        frame_width = int(Capture.get(3))
-        frame_height = int(Capture.get(4))   
-        size = (frame_width, frame_height)
-        result = cv2.VideoWriter('fil2.avi',  cv2.VideoWriter_fourcc(*'MJPG'),10, size)
-        
-        
+
+        processed_feed = None
         while self.ThreadActive:
-            ret, img1 = Capture.read()
+            ret, frame = Capture.read()
             if ret:
-                kernel = np.ones((1, 1), np.uint8)
-                
-                img = cv2.resize(img1, (240, 240)) 
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                data = np.array(img)
-                img = data.flatten()
-                img= img.reshape(240, 240)
-                
-                img = cv2.convertScaleAbs(img, alpha=self.contrast, beta=self.brightness)
 
-                # Create a CLAHE object (Arguments are optional)
-                clahe = cv2.createCLAHE(clipLimit=self.ClacheClipLimit, tileGridSize=(self.ClacheTile_one, self.ClacheTile_two))
-                cl1 = clahe.apply(img)
+                if self.mode_one_button_press == 1:
+                    processed_feed = self.video_processor(frame)
+                elif self.mode_two_button_press == 1:
+                    processed_feed = self.image_processor_mode_two(frame)
+                elif self.mode_three_button_press == 1:
+                    processed_feed = self.image_processor_mode_three(frame)
 
-                # Apply adaptive threshold
-                cl2 = cv2.medianBlur(cl1, self.medianBlur)
-                th1 = cv2.adaptiveThreshold(cl2, self.adaptiveThres_one, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY_INV, self.adaptiveThres_two, self.adaptiveThres_three)
+                if processed_feed is not None:
 
-                # Apply OTSU threshold
-                blur = cv2.GaussianBlur(cl1, (self.gaussianBlurTile_one, self.gaussianBlurTile_two), self.gaussianBlur)
-                ret3, th3 = cv2.threshold(blur, self.thresh_one, self.thresh_two, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+                    Qtformat = QImage(processed_feed.data, processed_feed.shape[1], processed_feed.shape[0], QImage.Format_RGB888)
+                    Qtformat_scaled_video = Qtformat.scaled(279, 530, Qt.KeepAspectRatio)
+                    Qtformat_scaled_settings = Qtformat.scaled(289, 250, Qt.KeepAspectRatio)
+                    self.ImageUpdate_video.emit(Qtformat_scaled_video)
+                    self.ImageUpdate_settings.emit(Qtformat_scaled_settings)
 
-                # Removing noise
-                th2 = th1 & th3
-
-                # Morphological transform
-                opening = cv2.morphologyEx(th2, cv2.MORPH_OPEN, kernel)
-
-                # Finding outlines via contouring process
-                contours, hierarchy = cv2.findContours(opening, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
-                img1 = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
-                dst = cv2.drawContours(img1, contours, -1, (0, 255, 0), -1)
-                
-                
-                #th4 = cv2.adaptiveThreshold(img,255,cv2.ADAPTIVE_THRESH_GAUSSIAN_C,cv2.THRESH_TRUNC,21,2)
-                _, th_trunc = cv2.threshold(img, 80, 255, cv2.THRESH_TOZERO)
-                
-                openingImg = cv2.cvtColor(th_trunc, cv2.COLOR_GRAY2BGR)
-                
-                print(th_trunc.shape)
-                
-                #openingImg=openingImg[openingImg > 3] = 1
-                
-                result.write(dst)
-
-                # Scale video feed before emitting
-                Qtformat = QImage(openingImg.data, openingImg.shape[1], openingImg.shape[0], QImage.Format_RGB888)
-                #Qtformat = QImage(dst.data, dst.shape[1], dst.shape[0], QImage.Format_RGB888)
-                Qtformat_scaled_video = Qtformat.scaled(301, 594, Qt.KeepAspectRatio)
-                Qtformat_scaled_settings = Qtformat.scaled(289, 300, Qt.KeepAspectRatio)
-
-                # Capture a frame, scale and emit for image page(camera)
                 if self.cam_button_press == 1:
-                    #Qtformat_scaled_camera = Qtformat.scaled(301, 594, Qt.KeepAspectRatio)
-                    
-                    #print(type(Qtformat_scaled_camera))
-                    #cv2_img = convertQImageToMat(Qtformat_scaled_camera)
-                    #returned = image_processor(cv2_img)
-                    returned = image_processor(img1)
-                    height, width, channel = returned.shape
-                    bytesPerLine = 3 * width
-                    qImg = QImage(returned.data, width, height, bytesPerLine, QImage.Format_RGB888).rgbSwapped()
-                    self.ImageUpdate_camera.emit(qImg)
-                    
-                    
-                self.cam_button_press = 0
+                    if self.mode_one_button_press == 1:
+                        processed_frame = self.video_processor(frame)
+                    elif self.mode_two_button_press == 1:
+                        processed_frame = self.image_processor_mode_two(frame)
+                    elif self.mode_three_button_press == 1:
+                        processed_frame = self.image_processor_mode_three(frame)
 
-                # Emit video feed for video and setting pages
-                self.ImageUpdate_video.emit(Qtformat_scaled_video)
-                self.ImageUpdate_settings.emit(Qtformat_scaled_settings)
+                    Qtformat = QImage(processed_frame.data, processed_frame.shape[1], processed_frame.shape[0], QImage.Format_RGB888)
+                    Qtformat_scaled_picture = Qtformat.scaled(301, 594, Qt.KeepAspectRatio)
+                    self.ImageUpdate_camera.emit(Qtformat_scaled_picture)
+                    self.cam_button_press = 0
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
