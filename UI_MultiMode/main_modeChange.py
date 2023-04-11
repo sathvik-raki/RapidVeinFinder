@@ -245,8 +245,6 @@ class Pi_camera(QThread):
         
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-       
-        
         # Apply a median blur to reduce noise
         img_blur = cv2.medianBlur(img, 5)
 
@@ -269,6 +267,7 @@ class Pi_camera(QThread):
         data = np.array(img)
         img = data.flatten()
         img= img.reshape(240, 240)
+        
         
         img = cv2.convertScaleAbs(img, alpha=self.contrast, beta=self.brightness)
 
@@ -337,12 +336,13 @@ class Pi_camera(QThread):
     def image_processor_mode_three(self, img):
 
         kernel = np.ones((1, 1), np.uint8)
-
         img = cv2.resize(img, (240, 240))
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        data = np.array(img)
-        img = data.flatten()
-        img = img.reshape(240, 240)
+        img = np.array(img)
+        #img = data.flatten()
+        #img = img.reshape(240, 240)
+        img = data 
+        
 
         img = cv2.convertScaleAbs(img, alpha= self.contrast, beta= self.brightness)
 
