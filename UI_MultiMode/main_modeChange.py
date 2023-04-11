@@ -245,7 +245,7 @@ class Pi_camera(QThread):
         
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-        kernel = np.ones((1, 1), np.uint8)
+       
         
         # Apply a median blur to reduce noise
         img_blur = cv2.medianBlur(img, 5)
@@ -261,6 +261,8 @@ class Pi_camera(QThread):
         img_with_veins = np.copy(img)
         img_with_veins[img_morph==255] = (img_with_veins[img_morph==255] * 0.5).astype(np.uint8)
         img = img_with_veins
+        
+        kernel = np.ones((1, 1), np.uint8)
 
         img = cv2.resize(img, (240, 240)) 
         #img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
