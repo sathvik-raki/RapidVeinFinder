@@ -10,9 +10,9 @@ while(True):
 
     ret, frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    no_of_templates = 20
 
-    for i in range(10,21):
-		
+    for i in range(1,no_of_templates+1):
         template = cv2.imread('images/template'+str(i)+'.png',0)
         w, h = template.shape[::-1]
         res = cv2.matchTemplate(gray,template,cv2.TM_SQDIFF)

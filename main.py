@@ -133,7 +133,7 @@ class MainWindow():
         # Saves only saves image if pixmap is found
         if pixmap is not None:
             Image = pixmap.toImage()
-            output_dir = r"C:\Users\jesse\Desktop\CapstoneImages"
+            output_dir = r"./captures"
             ImageName = "image"
             output_format = "jpg"
             count = 0
@@ -317,7 +317,9 @@ class Pi_camera(QThread):
         
         return img
 
-    def kmeans_algorithm(self, img, tolerance = 75):
+    def kmeans_algorithm(self, img, tolerance = 60):
+        
+        img = self.video_processor(img)
 
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
