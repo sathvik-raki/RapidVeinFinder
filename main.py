@@ -239,6 +239,8 @@ class Pi_camera(QThread):
         self.mode_one_button_press = 1
         self.mode_two_button_press = 0
         self.mode_three_button_press = 0
+        self.backgroundDarkness = 0.5
+        self.kmeansTolerance = 50
 
 
     def video_processor(self, img):
@@ -258,7 +260,7 @@ class Pi_camera(QThread):
 
         # Darken the pixels corresponding to the veins in the original image
         img_with_veins = np.copy(img)
-        img_with_veins[img_morph==255] = (img_with_veins[img_morph==255] * 0.5).astype(np.uint8)
+        img_with_veins[img_morph==255] = (img_with_veins[img_morph==255] * self.backgroundDarkness).astype(np.uint8)
         img = img_with_veins
         
 
@@ -317,7 +319,7 @@ class Pi_camera(QThread):
         
         return img
 
-    def kmeans_algorithm(self, img, tolerance = 60):
+    def kmeans_algorithm(self, img, tolerance):
         
         img = self.video_processor(img)
 
@@ -372,7 +374,7 @@ class Pi_camera(QThread):
                 elif self.mode_two_button_press == 1:
                     processed_feed = self.video_processor(frame)
                 elif self.mode_three_button_press == 1:
-                    processed_feed = self.kmeans_algorithm(frame)
+                    processed_feed = self.kmeans_algorithm(frame, self.kmeansTolerance)
 
                 if processed_feed is not None:
 
@@ -388,7 +390,7 @@ class Pi_camera(QThread):
                     elif self.mode_two_button_press == 1:
                         processed_frame = self.video_processor(frame)
                     elif self.mode_three_button_press == 1:
-                        processed_frame = self.kmeans_algorithm(frame)
+                        processed_frame = self.kmeans_algorithm(frame, self.kmeansTolerance)
 
                     Qtformat = QImage(processed_frame.data, processed_frame.shape[1], processed_frame.shape[0], QImage.Format_RGB888)
                     Qtformat_scaled_picture = Qtformat.scaled(301, 594, Qt.KeepAspectRatio)
