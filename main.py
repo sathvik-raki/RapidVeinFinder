@@ -48,11 +48,10 @@ class MainWindow():
         self.ui.brightness_slider.valueChanged.connect(self.set_brightness)
         self.ui.CCL_slider.valueChanged.connect(self.set_ClacheClipLimit)
         self.ui.C_tile_slider.valueChanged.connect(self.set_ClacheTile_one)
-        self.ui.M_blur_slider.valueChanged.connect(self.set_medianBlur)
+        self.ui.Background_darkness_slider.valueChanged.connect(self.set_Background_darkness)
         self.ui.AT_one_slider.valueChanged.connect(self.set_adaptiveThres_one)
-        self.ui.AT_two_slider.valueChanged.connect(self.set_adaptiveThres_two)
         self.ui.AT_three_slider.valueChanged.connect(self.set_adaptiveThres_three)
-        self.ui.GBT_slider.valueChanged.connect(self.set_gaussianBlurTile_one)
+        self.ui.Kmeans_slider.valueChanged.connect(self.set_Kmeans_tol)
         self.ui.GBlur_slider.valueChanged.connect(self.set_gaussianBlur)
         self.ui.Thres_one_slider.valueChanged.connect(self.set_thresh_one)
         self.ui.Thres_two_slider.valueChanged.connect(self.set_thresh_two)
@@ -67,19 +66,20 @@ class MainWindow():
         self.ui.brightness_slider.setValue(5)
         self.ui.CCL_slider.setValue(15)
         self.ui.C_tile_slider.setValue(7)
-        self.ui.M_blur_slider.setValue(5) #Unstable
+        self.ui.Background_darkness_slider.setValue(50)
         self.ui.AT_one_slider.setValue(255)
-        self.ui.AT_two_slider.setValue(25) #Unstable
         self.ui.AT_three_slider.setValue(255)
-        self.ui.GBT_slider.setValue(5) #Unstable
-        self.ui.GBlur_slider.setValue(0) 
+        self.ui.Kmeans_slider.setValue(50)
+        self.ui.GBlur_slider.setValue(0)
         self.ui.Thres_one_slider.setValue(0)
         self.ui.Thres_two_slider.setValue(255)
         self.ui.AT_three_slider.setMaximum(1000)
         self.ui.C_tile_slider.setMinimum(1)
         self.ui.AT_one_slider.setMaximum(1000)
-        self.ui.GBlur_slider.setMaximum(1000) 
+        self.ui.GBlur_slider.setMaximum(1000)
         self.ui.C_tile_slider.setMaximum(1000)
+        self.ui.Background_darkness_slider.setMaximum(100)
+        self.ui.Kmeans_slider.setMaximum(200)
 
     # Define what will be shown when buttons are clicked
     def show(self):
@@ -163,52 +163,59 @@ class MainWindow():
 
     # Set parameters functions
     def set_contrast(self, value):
-        self.Pi_camera.contrast = value/10
-        self.ui.contrast_display.setText(str(self.Pi_camera.contrast))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.contrast = value/10
+            self.ui.contrast_display.setText(str(self.Pi_camera.contrast))
 
     def set_brightness(self, value):
-        self.Pi_camera.brightness = value
-        self.ui.brightness_display.setText(str(self.Pi_camera.brightness))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.brightness = value
+            self.ui.brightness_display.setText(str(self.Pi_camera.brightness))
 
     def set_ClacheClipLimit(self, value):
-        self.Pi_camera.ClacheClipLimit = value/10
-        self.ui.CCL_display.setText(str(self.Pi_camera.ClacheClipLimit))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.ClacheClipLimit = value/10
+            self.ui.CCL_display.setText(str(self.Pi_camera.ClacheClipLimit))
 
     def set_ClacheTile_one(self, value):
-        self.Pi_camera.ClacheTile_one = value
-        self.ui.C_Tile_display.setText(str(self.Pi_camera.ClacheTile_one))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.ClacheTile_one = value
+            self.ui.C_Tile_display.setText(str(self.Pi_camera.ClacheTile_one))
 
-    def set_medianBlur(self, value):
-        self.Pi_camera.medianBlur = value
-        self.ui.median_blur_display.setText(str(self.Pi_camera.medianBlur))
+    def set_Background_darkness(self, value):
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.backgroundDarkness = value/100
+            self.ui.Background_darkness_display.setText(str(self.Pi_camera.backgroundDarkness))
 
     def set_adaptiveThres_one(self, value):
-        self.Pi_camera.adaptiveThres_one = value
-        self.ui.AT_one_display.setText(str(self.Pi_camera.adaptiveThres_one))
-
-    def set_adaptiveThres_two(self, value):
-        self.Pi_camera.adaptiveThres_two = value
-        self.ui.AT_two_display.setText(str(self.Pi_camera.adaptiveThres_two))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.adaptiveThres_one = value
+            self.ui.AT_one_display.setText(str(self.Pi_camera.adaptiveThres_one))
 
     def set_adaptiveThres_three(self, value):
-        self.Pi_camera.adaptiveThres_three = value/100
-        self.ui.AT_three_display.setText(str(self.Pi_camera.adaptiveThres_three))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.adaptiveThres_three = value/100
+            self.ui.AT_three_display.setText(str(self.Pi_camera.adaptiveThres_three))
 
-    def set_gaussianBlurTile_one(self, value):
-        self.Pi_camera.gaussianBlurTile_one = value
-        self.ui.GBT_one_display.setText(str(self.Pi_camera.gaussianBlurTile_one))
+    def set_Kmeans_tol(self, value):
+        if self.Pi_camera.mode_three_button_press == 1:
+            self.Pi_camera.kmeansTolerance = value
+            self.ui.Kmeans_display.setText(str(self.Pi_camera.kmeansTolerance))
 
     def set_gaussianBlur(self, value):
-        self.Pi_camera.gaussianBlur = value
-        self.ui.G_blur_display.setText(str(self.Pi_camera.gaussianBlur))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.gaussianBlur = value
+            self.ui.G_blur_display.setText(str(self.Pi_camera.gaussianBlur))
 
     def set_thresh_one(self, value):
-        self.Pi_camera.thresh_one = value
-        self.ui.Thres_one_display.setText(str(self.Pi_camera.thresh_one))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.thresh_one = value
+            self.ui.Thres_one_display.setText(str(self.Pi_camera.thresh_one))
 
     def set_thresh_two(self, value):
-        self.Pi_camera.thresh_two = value
-        self.ui.Thres_two_display.setText(str(self.Pi_camera.thresh_two))
+        if self.Pi_camera.mode_two_button_press == 1:
+            self.Pi_camera.thresh_two = value
+            self.ui.Thres_two_display.setText(str(self.Pi_camera.thresh_two))
 
 #Define Pi_camera class
 

@@ -436,7 +436,14 @@ background-color:rgb(215,214,213);
                  <item row="1" column="0">
                   <widget class="QPushButton" name="mode_one_button">
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);
+                    <string notr="true">QPushButton#mode_one_button{
+   padding: 10px;
+   background-color:white;
+}
+
+QPushButton:hover#mode_one_button {
+background-color:rgb(215,214,213);
+}
 </string>
                    </property>
                    <property name="text">
@@ -447,7 +454,14 @@ background-color:rgb(215,214,213);
                  <item row="1" column="1">
                   <widget class="QPushButton" name="mode_two_button">
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    <string notr="true">QPushButton#mode_two_button{
+   padding: 10px;
+   background-color:white;
+}
+
+QPushButton:hover#mode_two_button {
+background-color:rgb(215,214,213);
+}</string>
                    </property>
                    <property name="text">
                     <string>MODE 2</string>
@@ -457,7 +471,14 @@ background-color:rgb(215,214,213);
                  <item row="1" column="2">
                   <widget class="QPushButton" name="mode_three_button">
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    <string notr="true">QPushButton#mode_three_button{
+   padding: 10px;
+   background-color:white;
+}
+
+QPushButton:hover#mode_three_button {
+background-color:rgb(215,214,213);
+}</string>
                    </property>
                    <property name="text">
                     <string>MODE 3</string>
@@ -467,7 +488,14 @@ background-color:rgb(215,214,213);
                  <item row="2" column="0" colspan="3">
                   <widget class="QPushButton" name="camera_button">
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    <string notr="true">QPushButton#camera_button{
+   padding: 10px;
+   background-color:white;
+}
+
+QPushButton:hover#camera_button {
+background-color:rgb(215,214,213);
+}</string>
                    </property>
                    <property name="text">
                     <string/>
@@ -518,30 +546,30 @@ background-color:rgb(215,214,213);
                  <property name="spacing">
                   <number>5</number>
                  </property>
-                 <item row="11" column="3">
-                  <widget class="QLabel" name="GBT_one_display">
+                 <item row="10" column="0">
+                  <widget class="QLabel" name="Kmeans_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
-                    <string/>
+                    <string>K-means Tol:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="12" column="0">
-                  <widget class="QLabel" name="GBlur_para">
+                 <item row="5" column="0">
+                  <widget class="QLabel" name="Background_darkness_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
-                    <string>G.Blur:</string>
+                    <string>BG.Darkness:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="3" column="1" colspan="2">
-                  <widget class="QSlider" name="CCL_slider">
+                 <item row="5" column="1" colspan="2">
+                  <widget class="QSlider" name="Background_darkness_slider">
                    <property name="minimum">
-                    <number>-100</number>
+                    <number>0</number>
                    </property>
                    <property name="maximum">
                     <number>100</number>
@@ -563,8 +591,36 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="12" column="3">
-                  <widget class="QLabel" name="G_blur_display">
+                 <item row="1" column="1" colspan="2">
+                  <widget class="QSlider" name="contrast_slider">
+                   <property name="minimum">
+                    <number>1</number>
+                   </property>
+                   <property name="maximum">
+                    <number>30</number>
+                   </property>
+                   <property name="singleStep">
+                    <number>1</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="tracking">
+                    <bool>true</bool>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>1</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="10" column="3">
+                  <widget class="QLabel" name="Kmeans_display">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
@@ -573,13 +629,38 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="8" column="3">
-                  <widget class="QLabel" name="AT_three_display">
+                 <item row="5" column="3">
+                  <widget class="QLabel" name="Background_darkness_display">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
                     <string/>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="15" column="1" colspan="2">
+                  <widget class="QSlider" name="Thres_two_slider">
+                   <property name="minimum">
+                    <number>-255</number>
+                   </property>
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>1</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>10</number>
                    </property>
                   </widget>
                  </item>
@@ -620,23 +701,13 @@ background-color:rgb(215,214,213);
                    </layout>
                   </widget>
                  </item>
-                 <item row="8" column="0">
-                  <widget class="QLabel" name="AT_three_para">
+                 <item row="2" column="3">
+                  <widget class="QLabel" name="brightness_display">
                    <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                    <string notr="true">background-color: white;</string>
                    </property>
                    <property name="text">
-                    <string>A.T Three:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="0">
-                  <widget class="QLabel" name="contrast_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
-                   </property>
-                   <property name="text">
-                    <string>Contrast:</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
@@ -650,26 +721,6 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="3">
-                  <widget class="QLabel" name="brightness_display">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: white;</string>
-                   </property>
-                   <property name="text">
-                    <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="3" column="0">
-                  <widget class="QLabel" name="CCLone_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: white;</string>
-                   </property>
-                   <property name="text">
-                    <string>C.C.L One:</string>
-                   </property>
-                  </widget>
-                 </item>
                  <item row="3" column="3">
                   <widget class="QLabel" name="CCL_display">
                    <property name="styleSheet">
@@ -677,44 +728,6 @@ background-color:rgb(215,214,213);
                    </property>
                    <property name="text">
                     <string/>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="CTile_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: white;</string>
-                   </property>
-                   <property name="text">
-                    <string>C.Tile One:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="1" column="1" colspan="2">
-                  <widget class="QSlider" name="contrast_slider">
-                   <property name="minimum">
-                    <number>1</number>
-                   </property>
-                   <property name="maximum">
-                    <number>30</number>
-                   </property>
-                   <property name="singleStep">
-                    <number>1</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="tracking">
-                    <bool>true</bool>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>1</number>
                    </property>
                   </widget>
                  </item>
@@ -728,43 +741,90 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="AT_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
-                   </property>
-                   <property name="text">
-                    <string>A.T One:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="3">
-                  <widget class="QLabel" name="C_Tile_display">
+                 <item row="4" column="0">
+                  <widget class="QLabel" name="CTile_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: white;</string>
                    </property>
                    <property name="text">
-                    <string/>
+                    <string>C.Tile One:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="0">
-                  <widget class="QLabel" name="MBlur_para">
+                 <item row="1" column="0">
+                  <widget class="QLabel" name="contrast_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
-                    <string>M.Blur:</string>
+                    <string>Contrast:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="3">
-                  <widget class="QLabel" name="median_blur_display">
+                 <item row="2" column="1" colspan="2">
+                  <widget class="QSlider" name="brightness_slider">
+                   <property name="minimum">
+                    <number>-255</number>
+                   </property>
+                   <property name="maximum">
+                    <number>255</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>10</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="0">
+                  <widget class="QLabel" name="CCLone_para">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: white;</string>
+                   </property>
+                   <property name="text">
+                    <string>C.C.L One:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="3" column="1" colspan="2">
+                  <widget class="QSlider" name="CCL_slider">
+                   <property name="minimum">
+                    <number>-100</number>
+                   </property>
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>1</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>5</number>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="7" column="0">
+                  <widget class="QLabel" name="AT_three_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
-                    <string/>
+                    <string>A.T Three:</string>
                    </property>
                   </widget>
                  </item>
@@ -778,37 +838,67 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="7" column="0">
-                  <widget class="QLabel" name="AT_two_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 <item row="11" column="1" colspan="2">
+                  <widget class="QSlider" name="GBlur_slider">
+                   <property name="minimum">
+                    <number>-100</number>
                    </property>
-                   <property name="text">
-                    <string>A.T Two:</string>
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>1</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>5</number>
                    </property>
                   </widget>
                  </item>
-                 <item row="7" column="3">
-                  <widget class="QLabel" name="AT_two_display">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                 <item row="14" column="1" colspan="2">
+                  <widget class="QSlider" name="Thres_one_slider">
+                   <property name="minimum">
+                    <number>-100</number>
                    </property>
-                   <property name="text">
-                    <string/>
+                   <property name="maximum">
+                    <number>100</number>
+                   </property>
+                   <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
+                    <number>1</number>
+                   </property>
+                   <property name="orientation">
+                    <enum>Qt::Horizontal</enum>
+                   </property>
+                   <property name="tickPosition">
+                    <enum>QSlider::TicksBelow</enum>
+                   </property>
+                   <property name="tickInterval">
+                    <number>5</number>
                    </property>
                   </widget>
                  </item>
                  <item row="11" column="0">
-                  <widget class="QLabel" name="GBT_para">
+                  <widget class="QLabel" name="GBlur_para">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
                    <property name="text">
-                    <string>G.B.T One:</string>
+                    <string>G.Blur:</string>
                    </property>
                   </widget>
                  </item>
-                 <item row="15" column="3">
+                 <item row="14" column="3">
                   <widget class="QLabel" name="Thres_one_display">
                    <property name="styleSheet">
                     <string notr="true">background-color: rgb(255, 255, 255);</string>
@@ -818,7 +908,17 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="16" column="3">
+                 <item row="15" column="0">
+                  <widget class="QLabel" name="Thres_two_para">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: white;</string>
+                   </property>
+                   <property name="text">
+                    <string>T.H Two:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="15" column="3">
                   <widget class="QLabel" name="Thres_two_display">
                    <property name="styleSheet">
                     <string notr="true">background-color: white;</string>
@@ -828,8 +928,18 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="2" column="1" colspan="2">
-                  <widget class="QSlider" name="brightness_slider">
+                 <item row="6" column="0">
+                  <widget class="QLabel" name="AT_para">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);</string>
+                   </property>
+                   <property name="text">
+                    <string>A.T One:</string>
+                   </property>
+                  </widget>
+                 </item>
+                 <item row="6" column="1" colspan="2">
+                  <widget class="QSlider" name="AT_one_slider">
                    <property name="minimum">
                     <number>-255</number>
                    </property>
@@ -837,6 +947,9 @@ background-color:rgb(215,214,213);
                     <number>255</number>
                    </property>
                    <property name="pageStep">
+                    <number>1</number>
+                   </property>
+                   <property name="value">
                     <number>1</number>
                    </property>
                    <property name="orientation">
@@ -875,82 +988,37 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="5" column="1" colspan="2">
-                  <widget class="QSlider" name="M_blur_slider">
-                   <property name="minimum">
-                    <number>-100</number>
+                 <item row="7" column="3">
+                  <widget class="QLabel" name="AT_three_display">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>5</number>
+                   <property name="text">
+                    <string/>
                    </property>
                   </widget>
                  </item>
-                 <item row="6" column="1" colspan="2">
-                  <widget class="QSlider" name="AT_one_slider">
-                   <property name="minimum">
-                    <number>-255</number>
+                 <item row="14" column="0">
+                  <widget class="QLabel" name="Thres_one_para">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
-                   <property name="maximum">
-                    <number>255</number>
+                   <property name="text">
+                    <string>T.H One:</string>
                    </property>
-                   <property name="pageStep">
-                    <number>1</number>
+                  </widget>
+                 </item>
+                 <item row="11" column="3">
+                  <widget class="QLabel" name="G_blur_display">
+                   <property name="styleSheet">
+                    <string notr="true">background-color: rgb(255, 255, 255);</string>
                    </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>10</number>
+                   <property name="text">
+                    <string/>
                    </property>
                   </widget>
                  </item>
                  <item row="7" column="1" colspan="2">
-                  <widget class="QSlider" name="AT_two_slider">
-                   <property name="minimum">
-                    <number>-100</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>5</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="8" column="1" colspan="2">
                   <widget class="QSlider" name="AT_three_slider">
                    <property name="minimum">
                     <number>-255</number>
@@ -975,83 +1043,23 @@ background-color:rgb(215,214,213);
                    </property>
                   </widget>
                  </item>
-                 <item row="11" column="1" colspan="2">
-                  <widget class="QSlider" name="GBT_slider">
-                   <property name="minimum">
-                    <number>-100</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>5</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="12" column="1" colspan="2">
-                  <widget class="QSlider" name="GBlur_slider">
-                   <property name="minimum">
-                    <number>-100</number>
-                   </property>
-                   <property name="maximum">
-                    <number>100</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>5</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="15" column="0">
-                  <widget class="QLabel" name="Thres_one_para">
-                   <property name="styleSheet">
-                    <string notr="true">background-color: rgb(255, 255, 255);</string>
-                   </property>
-                   <property name="text">
-                    <string>T.H One:</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="16" column="0">
-                  <widget class="QLabel" name="Thres_two_para">
+                 <item row="4" column="3">
+                  <widget class="QLabel" name="C_Tile_display">
                    <property name="styleSheet">
                     <string notr="true">background-color: white;</string>
                    </property>
                    <property name="text">
-                    <string>T.H Two:</string>
+                    <string/>
                    </property>
                   </widget>
                  </item>
-                 <item row="15" column="1" colspan="2">
-                  <widget class="QSlider" name="Thres_one_slider">
+                 <item row="10" column="1" colspan="2">
+                  <widget class="QSlider" name="Kmeans_slider">
                    <property name="minimum">
-                    <number>-100</number>
+                    <number>0</number>
                    </property>
                    <property name="maximum">
-                    <number>100</number>
+                    <number>200</number>
                    </property>
                    <property name="pageStep">
                     <number>1</number>
@@ -1067,31 +1075,6 @@ background-color:rgb(215,214,213);
                    </property>
                    <property name="tickInterval">
                     <number>5</number>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="16" column="1" colspan="2">
-                  <widget class="QSlider" name="Thres_two_slider">
-                   <property name="minimum">
-                    <number>-255</number>
-                   </property>
-                   <property name="maximum">
-                    <number>255</number>
-                   </property>
-                   <property name="pageStep">
-                    <number>1</number>
-                   </property>
-                   <property name="value">
-                    <number>1</number>
-                   </property>
-                   <property name="orientation">
-                    <enum>Qt::Horizontal</enum>
-                   </property>
-                   <property name="tickPosition">
-                    <enum>QSlider::TicksBelow</enum>
-                   </property>
-                   <property name="tickInterval">
-                    <number>10</number>
                    </property>
                   </widget>
                  </item>
